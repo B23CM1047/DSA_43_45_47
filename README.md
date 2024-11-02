@@ -1,19 +1,18 @@
 # DSA_43_45_47
-
 #include <iostream>
+#include <fstream>
 #include <vector>
+#include <string>
+#include <algorithm>
 using namespace std;
 
-
 struct SuffixTreeNode {
-    
-    SuffixTreeNode* children[26];
-    int startIndex; 
+    SuffixTreeNode* children[256];
+    int startIndex;
+    int stringNumber;
 
-   
-    SuffixTreeNode(int index) : startIndex(index) {
-        
-        for (int i = 0; i < 26; i++) {
+    SuffixTreeNode(int index, int strNum) : startIndex(index), stringNumber(strNum) {
+        for (int i = 0; i < 256; i++) {
             children[i] = nullptr;
         }
     }
@@ -21,71 +20,193 @@ struct SuffixTreeNode {
 
 class SuffixTree {
 private:
-    SuffixTreeNode* root; 
-    string text;          
+    SuffixTreeNode* root;
+    string text;
+    int stringNumber;
 
-    
     void insertSuffix(int suffixStart) {
         SuffixTreeNode* currentNode = root;
-
-       
         for (int i = suffixStart; i < text.length(); i++) {
             char currentChar = text[i];
-            int index = currentChar - 'a'; 
-
-            
-            if (currentNode->children[index] == nullptr) {
-               
-                currentNode->children[index] = new SuffixTreeNode(suffixStart);
+            if (currentNode->children[(unsigned char)currentChar] == nullptr) {
+                currentNode->children[(unsigned char)currentChar] = new SuffixTreeNode(suffixStart, stringNumber);
             }
-
-            
-            currentNode = currentNode->children[index];
+            currentNode = currentNode->children[(unsigned char)currentChar];
         }
     }
 
-    
-    void printTree(SuffixTreeNode* node, int depth) {
-       
-        for (int i = 0; i < 26; i++) {
-            if (node->children[i] != nullptr) {
-                char edgeChar = 'a' + i; 
-                cout << string(depth, '-') << edgeChar << " (" << node->children[i]->startIndex << ")" << endl;
-                
-                printTree(node->children[i], depth + 1);
-            }
+    void buildSuffixTree() {
+        for (int i = 0; i < text.length(); i++) {
+            insertSuffix(i);
         }
     }
 
 public:
-   
-    SuffixTree(const string& s) : text(s) {
-        root = new SuffixTreeNode(-1); 
+    SuffixTree(const string& s, int strNum) : text(s), stringNumber(strNum) {
+        root = new SuffixTreeNode(-1, strNum);
         buildSuffixTree();
     }
 
-    
-    void buildSuffixTree() {
-        for (int i = 0; i < text.length(); i++) {
-            insertSuffix(i); 
-        }
+    SuffixTreeNode* getRoot() {
+        return root;
     }
 
-   
-    void printSuffixTree() {
-        cout << "Suffix Tree Structure:" << endl;
-        printTree(root, 0); 
+    string getText() const {
+        return text;
     }
 };
 
+// Recursive helper function to find the longest common substring
+int findLCS(SuffixTreeNode* node1, SuffixTreeNode* node2, int depth, int currentStart, int& maxLength, int& startIdx) {
+    if (!node1 || !node2) return depth;
+    int currentDepth = depth;
+    for (int i = 0; i < 256; i++) {
+        if (node1->children[i] && node2->children[i]) {
+            int newDepth = findLCS(node1->children[i], node2->children[i], depth + 1, node1->children[i]->startIndex, maxLength, startIdx);
+            if (newDepth > maxLength) {
+                maxLength = newDepth;
+                startIdx = currentStart;
+            }
+            currentDepth = max(currentDepth, newDepth);
+        }
+    }
+    return currentDepth;
+}
+
+// Function to compare two suffix trees and find the longest common substring
+string getLongestCommonSubstring(SuffixTree& tree1, SuffixTree& tree2) {
+    int maxLength = 0;
+    int startIdx = -1;
+    findLCS(tree1.getRoot(), tree2.getRoot(), 0, 0, maxLength, startIdx);
+    return (startIdx == -1 || maxLength == 0) ? "" : tree1.getText().substr(startIdx, maxLength);
+}
+
+// Save each person's DNA, gender, and name in DNA bank
+void saveToDNABank(const string& name, const string& dna, const string& gender) {
+    ofstream outFile("DNA_bank.txt", ios::app);
+    if (outFile.is_open()) {
+        outFile << "Name: " << name << "\n";
+        outFile << "Gender: " << gender << "\n";
+        outFile << "DNA Sequence: " << dna << "\n";
+        outFile << "--------------------------\n";
+        outFile.close();
+        cout << "Information saved to DNA_bank.txt\n";
+    } else {
+        cout << "Error: Unable to open file.\n";
+    }
+}
+
+// Load DNA information from file by name
+bool loadFromDNABank(const string& name, string& dna, string& gender) {
+    ifstream inFile("DNA_bank.txt");
+    if (!inFile.is_open()) {
+        cout << "Error: Unable to open DNA_bank.txt\n";
+        return false;
+    }
+    
+    string line;
+    bool found = false;
+    while (getline(inFile, line)) {
+        if (line.find("Name: " + name) != string::npos) {
+            found = true;
+            getline(inFile, line);  // Read gender line
+            gender = line.substr(8); // Extract gender
+            getline(inFile, line);   // Read DNA sequence line
+            dna = line.substr(13);   // Extract DNA sequence
+            break;
+        }
+    }
+    inFile.close();
+    return found;
+}
+
+// Check if a name already exists in DNA_bank.txt
+bool isNameExisting(const string& name) {
+    ifstream inFile("DNA_bank.txt");
+    if (!inFile.is_open()) {
+        cout << "Error: Unable to open DNA_bank.txt\n";
+        return false;
+    }
+    
+    string line;
+    while (getline(inFile, line)) {
+        if (line.find("Name: " + name) != string::npos) {
+            inFile.close();
+            return true;
+        }
+    }
+    inFile.close();
+    return false;
+}
+
+// Input function with choice to load from file or enter new information
+void getPersonInfo(string& name, string& dna, string& gender, int personNumber) {
+    int choice;
+    cout << "For person " << personNumber << ", choose option:\n";
+    cout << "1. Use stored DNA data\n";
+    cout << "2. Enter new DNA data\n";
+    cout << "Enter choice (1 or 2): ";
+    cin >> choice;
+    
+    if (choice == 1) {
+        cout << "Enter name of person " << personNumber << ": ";
+        cin >> name;
+        if (!loadFromDNABank(name, dna, gender)) {
+            cout << "No data found for " << name << ". Please enter details manually.\n";
+            choice = 2;
+        }
+    }
+
+    if (choice == 2) {
+        do {
+            cout << "Enter a unique name for person " << personNumber << ": ";
+            cin >> name;
+            if (isNameExisting(name)) {
+                cout << "The name \"" << name << "\" already exists. Please choose another name.\n";
+            }
+        } while (isNameExisting(name));
+        
+        cout << "Enter DNA gene code of " << name << ": ";
+        cin >> dna;
+        cout << "Enter gender of " << name << ": ";
+        cin >> gender;
+        saveToDNABank(name, dna, gender);
+    }
+}
+
 int main() {
-    string text;
-    cin >> text;
+    string text1, text2, gen1, gen2, name1, name2;
 
-    SuffixTree suffixTree(text);
+    // Get info for person 1
+    getPersonInfo(name1, text1, gen1, 1);
 
-   
-    suffixTree.printSuffixTree();
+    // Get info for person 2
+    getPersonInfo(name2, text2, gen2, 2);
+
+    // Build suffix trees and find LCS
+    SuffixTree suffixTree1(text1, 1);
+    SuffixTree suffixTree2(text2, 2);
+
+    string lcs = getLongestCommonSubstring(suffixTree1, suffixTree2);
+
+    if (lcs.empty()) {
+        cout << "No common substring found.\n";
+    } else {
+        cout << "Longest Common Substring: " << lcs << "\n";
+        cout << "Length of LCS: " << lcs.length() << " characters\n";
+    }
+
+    float ratio = 0;
+    if (text1.length() == text2.length()) {
+        ratio = (float)lcs.length() / text1.length();
+        cout << "Percentage matched = " << ratio * 100 << "%\n";
+    } else {
+        ratio = (float)lcs.length() / text1.length();
+        cout << "Percentage of Person 1 matched with Person 2 = " << ratio * 100 << "%\n";
+        
+        ratio = (float)lcs.length() / text2.length();
+        cout << "Percentage of Person 2 matched with Person 1 = " << ratio * 100 << "%\n";
+    }
 
     return 0;
 }
