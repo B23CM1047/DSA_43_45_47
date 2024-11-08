@@ -1,4 +1,3 @@
-# DSA_43_45_47
 #include <iostream>
 #include <fstream>
 #include <iomanip>
@@ -214,13 +213,199 @@ void addNewDNA() {
     saveToDNABank(name, dna, gender);
 }
 
+void deleteFromDNABank(const string& name) {
+    ifstream inFile("DNA_bank.txt");
+    if (!inFile.is_open()) {
+        cout << "Error: Unable to open DNA_bank.txt\n";
+        return;
+    }
+
+    // Temporary storage for lines to keep
+    vector<string> lines;
+    string line;
+    bool found = false;
+
+    // Read through the file and save lines that don't match the specified name
+    while (getline(inFile, line)) {
+        if (line.find("Name: " + name) != string::npos) {
+            found = true;
+            // Skip lines for the entire record of the found name
+            getline(inFile, line); // Skip gender line
+            getline(inFile, line); // Skip DNA sequence line
+            getline(inFile, line); // Skip separator line
+        } else {
+            lines.push_back(line);
+        }
+    }
+    inFile.close();
+
+    if (!found) {
+        cout << "No data found for " << name << ".\n";
+        return;
+    }
+
+    // Rewrite file with updated content
+    ofstream outFile("DNA_bank.txt");
+    if (!outFile.is_open()) {
+        cout << "Error: Unable to open DNA_bank.txt\n";
+        return;
+    }
+    for (const auto& line : lines) {
+        outFile << line << "\n";
+    }
+    outFile.close();
+
+    cout << "DNA information for " << name << " has been deleted from DNA_bank.txt.\n";
+}
+
+void setPassword() {
+    string password;
+    cout << "Set a new password for DNA information retrieval: ";
+    cin >> password;
+
+    ofstream passFile("password.txt");
+    if (passFile.is_open()) {
+        passFile << password;
+        passFile.close();
+        cout << "Password set successfully.\n";
+    } else {
+        cout << "Error: Unable to save the password.\n";
+    }
+}
+
+// Function to verify password for information retrieval
+bool verifyPassword() {
+    ifstream passFile("password.txt");
+    if (!passFile.is_open()) {
+        cout << "No password set. Please set a password first.\n";
+        return false;
+    }
+
+    string savedPassword, enteredPassword;
+    getline(passFile, savedPassword);
+    passFile.close();
+
+    cout << "Enter password to access DNA information retrieval: ";
+    cin >> enteredPassword;
+
+    if (enteredPassword == savedPassword) {
+        return true;
+    } else {
+        cout << "Incorrect password. Access denied.\n";
+        return false;
+    }
+}
+
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <cctype>
+#include <string>
+
+using namespace std;
+
+void askOrganDonation() {
+    string name, phoneNumber, dob, gender;
+    char donateChoice;
+
+    // Ask if they want to donate organs
+    cout << "Do you want to donate organs in the future? (Y/N): ";
+    cin >> donateChoice;
+
+    // Convert the choice to uppercase for easier comparison
+    donateChoice = toupper(donateChoice);
+
+    if (donateChoice == 'Y') {
+
+        cout << "Please enter your personal details:\n";
+    cout << "Name: ";
+    cin.ignore();  // To clear the input buffer
+    getline(cin, name);
+    cout << "Phone Number: ";
+    getline(cin, phoneNumber);
+    cout << "Date of Birth (DD/MM/YYYY): ";
+    getline(cin, dob);
+    cout << "Gender (Male/Female/Other): ";
+    getline(cin, gender);
+
+        cout << "Please select the organs you want to donate (select the numbers corresponding to your choices):\n";
+        cout << "1. Eyes\n";
+        cout << "2. Kidney\n";
+        cout << "3. Liver\n";
+        cout << "4. Heart\n";
+        cout << "5. Lungs\n";
+        cout << "6. Pancreas\n";
+        cout << "7. Skin\n";
+        cout << "8. Bone Marrow\n";
+        cout << "9. Small Intestine\n";
+        cout << "10. Blood\n";
+
+        vector<string> selectedOrgans;
+        int choice;
+        while (true) {
+            cout << "Enter a number (1-10) to select an organ to donate or 0 to finish selecting: ";
+            cin >> choice;
+
+            if (choice == 0) break; // Stop selection when 0 is entered
+
+            if (choice < 1 || choice > 10) {
+                cout << "Invalid choice. Please select a number between 1 and 10.\n";
+            } else {
+                switch (choice) {
+                    case 1: selectedOrgans.push_back("Eyes"); break;
+                    case 2: selectedOrgans.push_back("Kidney"); break;
+                    case 3: selectedOrgans.push_back("Liver"); break;
+                    case 4: selectedOrgans.push_back("Heart"); break;
+                    case 5: selectedOrgans.push_back("Lungs"); break;
+                    case 6: selectedOrgans.push_back("Pancreas"); break;
+                    case 7: selectedOrgans.push_back("Skin"); break;
+                    case 8: selectedOrgans.push_back("Bone Marrow"); break;
+                    case 9: selectedOrgans.push_back("Small Intestine"); break;
+                    case 10: selectedOrgans.push_back("Blood"); break;
+                }
+            }
+        }
+
+        // Save the collected information to the organ_donation.txt file
+        ofstream outFile("organ_donation.txt", ios::app);
+        if (outFile.is_open()) {
+            outFile << "===========================\n";
+            outFile << "Name           : " << name << "\n";
+            outFile << "Phone Number   : " << phoneNumber << "\n";
+            outFile << "Date of Birth  : " << dob << "\n";
+            outFile << "Gender         : " << gender << "\n";
+            outFile << "Organs Donated : ";
+            if (selectedOrgans.empty()) {
+                outFile << "None\n";
+            } else {
+                for (const auto& organ : selectedOrgans) {
+                    outFile << organ << ", ";
+                }
+                outFile << "\n";
+            }
+            outFile << "===========================\n";
+            outFile.close();
+            cout << "Your organ donation preferences and personal details have been saved.\n";
+        } else {
+            cout << "Error: Unable to save organ donation preferences.\n";
+        }
+    } else {
+        cout << "You chose not to donate organs in the future.\n";
+    }
+}
+
+
 int main() {
    int mainChoice;
     cout << "Choose an option:\n";
     cout << "1. DNA Test\n";
     cout << "2. DNA Information Retrieval\n";
     cout << "3. Add New DNA Information\n";
-    cout << "Enter choice (1, 2, or 3): ";
+    cout << "4. Delete DNA Information\n";
+    cout << "5. Set or Update Password\n";
+    
+    
+    cout << "Enter choice (1, 2, 3, 4, 5 ): ";
     cin >> mainChoice;
     
      if (mainChoice == 1) {
@@ -304,13 +489,27 @@ int main() {
     cout << "====================================\n\n";
      }
       else if (mainChoice == 2) {
-        retrieveDNAInfo();
+        if (verifyPassword()) {
+            retrieveDNAInfo();
+        }
     } 
       else if (mainChoice ==3){
         addNewDNA();
       }
-      else {
+      else if(mainChoice == 4)
+      {
+        string name;
+        cout << "Enter the name of the person to delete from DNA bank: ";
+        cin >> name;
+        deleteFromDNABank(name);
+      }
+      else if (mainChoice == 5) {
+        setPassword();
+    } 
+     else {
         cout << "Invalid choice.\n";
     }
+
+    askOrganDonation();
     return 0;
 }
