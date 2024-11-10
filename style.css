@@ -1,0 +1,141 @@
+/* General body styling */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f0f8ff;
+}
+
+#organDonationButton {
+    position: fixed;
+    bottom: 20px;
+    left: 1110px;
+    font-size: 20px;
+    padding: 10px 20px;
+    background-color: #6a5acd; 
+    color: rgb(252, 248, 249); /* White text */
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    z-index: 1000; /* Ensure it appears above other elements */
+}
+/* Header */
+h1 {
+    color: #333;
+    margin: 20px 0;
+}
+
+/* Tabs styling */
+.tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.tabs button {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #6a5acd;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.tabs button:hover {
+    background-color: #836fff;
+}
+
+/* Content section styling */
+.content-section {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+    width: 80%;
+    max-width: 500px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.content-section h2 {
+    color: #6a5acd;
+}
+
+/* Form labels */
+label {
+    font-weight: bold;
+    display: block;
+    margin-top: 10px;
+}
+
+/* Text inputs */
+input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Submit buttons */
+button[type="submit"] {
+    margin-top: 20px;
+    padding: 10px 15px;
+    background-color: #6a5acd;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+button[type="submit"]:hover {
+    background-color: #836fff;
+}
+
+/* Result display styling */
+#comparisonResult, #retrievalResult, #addResult, #deleteResult {
+    margin-top: 20px;
+    color: #333;
+    padding: 10px;
+    background-color: #e6e6fa;
+    border-radius: 5px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Hide all content sections initially */
+.content-section {
+    display: none;
+}
+
+/* Helper class for active tab button */
+.active-tab {
+    background-color: #836fff;
+    color: #fff;
+    font-weight: bold;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 600px) {
+    .tabs button {
+        padding: 8px 12px;
+        font-size: 14px;
+    }
+    
+    .content-section {
+        width: 90%;
+        padding: 15px;
+    }
+    
+    button[type="submit"] {
+        font-size: 14px;
+        padding: 8px 12px;
+    }
+}
