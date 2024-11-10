@@ -1,0 +1,45 @@
+Name: mom
+Gender: female
+DNA Sequence: ATCGAC
+Password: asdf
+--------------------------
+Name: dad
+Gender: male
+DNA Sequence: ATCCAG
+Password: v@m
+--------------------------
+Name: krishna
+Gender: male
+DNA Sequence: ASDSF
+password: v@msi
+--------------------------
+Name: krishna
+Gender: male
+DNA Sequence: ASDSF
+password: v@msi
+--------------------------
+Name: dai
+Gender: male
+DNA Sequence: ATCGAC
+password: csofaunj
+--------------------------
+Name: sravanth
+Gender: male
+DNA Sequence: ATC
+password: sra
+--------------------------
+Name: hero
+Gender: male
+DNA Sequence: ATC
+password: sra
+--------------------------
+Name: neha
+Gender: female
+DNA Sequence: ATGC
+password: nehaa
+--------------------------
+Name: saisha
+Gender: female
+DNA Sequence: ATC
+password: saii
+--------------------------
