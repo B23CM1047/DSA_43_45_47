@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DNA Analysis Platform</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <h1>DNA Analysis Platform</h1>
+    
+    <!-- Tab Buttons -->
+    <div class="tabs">
+        <button onclick="showSection('dnaComparison')">DNA Comparison</button>
+        <button onclick="showSection('dnaInfoRetrieval')">DNA Information Retrieval</button>
+        <button onclick="showSection('addDNAToBank')">Add DNA to Bank</button>
+        <button onclick="showSection('deleteFromBank')">Delete DNA from Bank</button> 
+    </div>
+    <div id="dnaComparison" class="content-section" style="display: none;">
+        <h2>DNA Comparison</h2>
+        <form id="compareForm" onsubmit="handleDNAComparison(event)">
+            <h3>Person 1</h3>
+            <label for="name1">Name:</label>
+            <input type="text" id="name1" required>
+            
+            <label for="dna1">DNA Code:</label>
+            <input type="text" id="dna1" required>
+
+            <label for="gender1">Gender:</label>
+            <select id="gender1" required>
+                <option value="">Select Gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+            </select>
+            
+            <label for="password1">Password:</label>
+            <input type="text" id="password1" required>
+
+            <h3>Person 2</h3>
+            <label for="name2">Name:</label>
+            <input type="text" id="name2" required>
+            
+            <label for="dna2">DNA Code:</label>
+            <input type="text" id="dna2" required>
+            
+            <label for="gender2">Gender:</label>
+            <select id="gender2" required>
+                <option value="">Select Gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+            </select>
+
+            <label for="password2">Password:</label>
+            <input type="text" id="password2" required>
+
+            <br><br><br><br>
+            <button type="submit">Compare DNA</button>
+        </form>
+    </div>
+    <div id="comparisonResult"></div>
+    
+    <!-- DNA Information Retrieval Section -->
+    <div id="dnaInfoRetrieval" class="content-section" style="display: none;">
+        <h2>DNA Information Retrieval</h2>
+        <form id="retrieveForm" onsubmit="handleInfoRetrieval(event)">
+            <label for="retrieveName">Enter Name:</label>
+            <input type="text" id="retrieveName" required>
+            <label for="retrieveNamepassword">Enter Password:</label>
+            <input type="text" id="retrieveNamepassword" required>
+            <br><br><br><br>
+            <button type="submit">Retrieve DNA Information</button>
+        </form>
+    </div>
+    <div id="retrievalResult"></div>
+    
+   
+    <div id="deleteFromBank" class="content-section" style="display: none;">
+        <h2>Delete DNA from Bank</h2>
+        <form id="deleteDNAForm" onsubmit="handleDeleteDNA(event)">
+            <label for="deleteName">Enter Name to Delete:</label>
+            <input type="text" id="deleteName" required>
+            <label for="deleteNamepassword">Enter password to Delete:</label>
+            <input type="text" id="deleteNamepassword" required>
+            <br><br><br><br>
+            <button type="submit">Delete DNA</button>
+        </form>
+    </div>
+     <!-- Add DNA to Bank Section -->
+     <div id="addDNAToBank" class="content-section" style="display: none;">
+        <h2>Add DNA to Bank</h2>
+        <form id="addDNAForm" onsubmit="handleAddToBank(event)">
+            <label for="newName">Name:</label>
+            <input type="text" id="newName" required>
+            
+            <label for="newDNA">DNA Code:</label>
+            <input type="text" id="newDNA" required>
+            
+            <label for="newGender">Gender:</label>
+            <input type="text" id="newGender" required>
+
+            <label for="newPassword">Password:</label>
+            <input type="text" id="newPassword" required>
+
+            <br><br><br><br>
+            <button type="submit">Add DNA</button>
+        </form>
+    </div>
+    
+    <div id="addResult"></div>
+    <div id="deleteResult"></div> <!-- Div to display deletion result -->
+
+    <div id="organDonation" class="content-section" style="display: none;">
+        <h2>Organ Donation</h2>
+        <form id="organDonationForm" onsubmit="handleOrganDonation(event)">
+            <label for="donorName">Name:</label>
+            <input type="text" id="donorName" required>
+            
+            <label for="phoneNumber">Phone Number:</label>
+            <input type="text" id="phoneNumber" required>
+            
+            <label for="dob">Date of Birth (DD/MM/YYYY):</label>
+            <input type="text" id="dob" required>
+
+            <label for="gender">Gender:</label>
+            <select id="gender" required>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+            </select>
+
+            <label>Organs to Donate:</label><br>
+            <label><input type="checkbox" name="organ" value="1"> Eyes</label><br>
+            <label><input type="checkbox" name="organ" value="2"> Kidney</label><br>
+            <label><input type="checkbox" name="organ" value="3"> Liver</label><br>
+            <label><input type="checkbox" name="organ" value="4"> Heart</label><br>
+            <label><input type="checkbox" name="organ" value="5"> Lungs</label><br>
+            <label><input type="checkbox" name="organ" value="6"> Pancreas</label><br>
+            <label><input type="checkbox" name="organ" value="7"> Bone Marrow</label><br>
+            <label><input type="checkbox" name="organ" value="8"> Blood</label><br>
+            
+            <button type="submit">Submit Organ Donation</button>
+        </form>
+    </div>
+    
+    <!-- Organ Donation Button -->
+    <button id="organDonationButton" onclick="showSection('organDonation')">Organ Donation</button>
+
+
+    <script src="script.js"></script>
+</body>
+</html>
